@@ -17,11 +17,16 @@ presence.on('UpdateData', async () => {
     startTimestamp: browsingTimestamp,
   }
 
-  if (window.location.hostname.startsWith('status')) {
-    presenceData.details = 'Status Page'
+  if (window.location.pathname === '/') {
+    presenceData.details = 'Look first / Then leap.'
+    presenceData.state = 'Home Page'
   }
-  else if (window.location.pathname === '/') {
-    presenceData.details = 'Home Page'
+  else if (window.location.pathname.startsWith('/status')) {
+    presenceData.details = `Website Status: ${document
+      .querySelector('body')
+      ?.textContent
+      ?.trim() || 'Unknown Status'}`
+    presenceData.state = 'Browsing Status Page...'
   }
   else if (window.location.pathname.startsWith('/markets/cryptocurrencies')) {
     presenceData.details = 'Cryptocurrency Market'
@@ -134,32 +139,16 @@ presence.on('UpdateData', async () => {
       ?.trim()
   }
   else if (window.location.pathname.startsWith('/chart')) {
-    presenceData.details = 'Viewing Chart...'
-
-    // Full Interactive Chart
-    const title = document
-      .querySelector(
-        'body > div.js-rootresizer__contents > div.layout__area--right > div > div.widgetbar-pages > div.widgetbar-pagescontent > div.widgetbar-page.active > div.widget-1UXejvkz.widgetbar-widget.widgetbar-widget-detail > div.widgetbar-widgetbody > div > div.wrapper-1CeUhfBr > div:nth-child(1) > div:nth-child(1) > span > a > span.text-H5Jbe1VB',
-      )
+    presenceData.details = `Viewing Chart: ${document
+      .querySelector('#header-toolbar-symbol-search > div')
       ?.textContent
       ?.trim()
-    // Popup Chart Idea
-      || document
-        .querySelector(
-          '#overlap-manager-root > div > div.tv-dialog__modal-wrap > div > div > div > div:nth-child(1) > div > div > div > div:nth-child(1) > div.tv-chart-view__header > div.tv-chart-view__title.selectable > div > div.tv-chart-view__title-row.tv-chart-view__title-row--symbol.tv-chart-view__symbol.js-chart-view__symbol.js-chart-view__ticker.quote-ticker-inited > a:nth-child(1)',
-        )
-        ?.textContent
-        ?.trim()
-    // Full Chart Idea Page
-        || document
-          .querySelector(
-            'body > div.tv-main > div.tv-content > div > div > div:nth-child(1) > div.tv-chart-view__header > div.tv-chart-view__title.selectable > div > div.tv-chart-view__title-row.tv-chart-view__title-row--symbol.tv-chart-view__symbol.js-chart-view__symbol.js-chart-view__ticker.quote-ticker-inited > a:nth-child(1)',
-          )
-          ?.textContent
-          ?.trim()
-
-    if (title)
-      presenceData.state = title
+      || 'Unknown Ticker'}`
+    presenceData.state = `${document
+      .querySelector('body > div.js-rootresizer__contents > div > div.layout__area--center.unselectable > div.chart-container.single-visible.top-full-width-chart.active > div.chart-container-border > div > div.chart-markup-table > div:nth-child(1) > div.chart-markup-table.pane > div > div.legend-l31H9iuA.noWrap-l31H9iuA.wrappable-l31H9iuA > div.legendMainSourceWrapper-l31H9iuA > div.withCustomTextColor-l31H9iuA.item-l31H9iuA.series-l31H9iuA.hideInvisibleHover-l31H9iuA > div.noWrapWrapper-l31H9iuA > div.titlesWrapper-l31H9iuA > div.titleWrapper-l31H9iuA.withDot-l31H9iuA.mainTitle-l31H9iuA.apply-common-tooltip.withAction-l31H9iuA > button')
+      ?.textContent
+      ?.trim()
+      || 'Unknown Symbol'}`
   }
   else if (window.location.pathname.startsWith('/script')) {
     presenceData.details = 'Viewing Script...'
